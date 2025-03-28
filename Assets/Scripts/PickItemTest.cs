@@ -13,12 +13,10 @@ public class PickItemTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        void OnTriggerEnter(Collider other)
-        {
-            if (other.CompareTag("MaleCharacterPBR"))
-            {
-                Destroy(gameObject);
-            }
-        }
+       
+    }
+    void OnTriggerEnter(Collider other)
+    {
+        Destroy(gameObject);
     }
 }

@@ -13,9 +13,23 @@ public class CameraController : MonoBehaviour
     public float minDistance = 5.0f; // Distanza minima della telecamera
     public float maxDistance = 15.0f; // Distanza massima della telecamera
 
+    private bool isRightMouseDown = false; // gestire il blocco rotazione
+
     void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+
+        // Controlla se il tasto destro è premuto
+        if (Input.GetMouseButtonDown(1))
+        {
+            isRightMouseDown = true;
+        }
+        else if (Input.GetMouseButtonUp(1))
+        {
+            isRightMouseDown = false;
+        }
+        if (!isRightMouseDown)  // questo if SERVE PER BLOCCARE LA VISUALE SE IL TASTO DESTRO è PREMUTO
+        {
+            float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
         xRotation -= mouseY;
@@ -23,6 +37,7 @@ public class CameraController : MonoBehaviour
 
         // Aggiorna la rotazione orizzontale
         yRotation += mouseX;
+        }
 
         // Gestione dello zoom con la rotellina del mouse
         float scrollInput = Input.GetAxis("Mouse ScrollWheel");

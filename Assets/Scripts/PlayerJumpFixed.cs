@@ -6,7 +6,8 @@ public class PlayerJumpFixed : MonoBehaviour
     private Rigidbody rb;
     private bool isGrounded;
     public float fallMultiplier = 2.5f;
-    public float tiltAmount = 5f; // inclinazione del personaggio
+    public float tiltAmount = 7f; // inclinazione del personaggio
+    public float tiltSpeed = 3f; // velocità di inclinazione
 
     void Start()
     {
@@ -23,8 +24,12 @@ public class PlayerJumpFixed : MonoBehaviour
             rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y * 0.5f, rb.velocity.z);
         }
         // Inclinazione del personaggio in base alla velocità verticale
-        float tilt = rb.velocity.y * tiltAmount;
-        transform.rotation = Quaternion.Euler(tilt, transform.rotation.eulerAngles.y, 0);
+        float targetTilt = rb.velocity.y * tiltAmount;
+
+        // Applica un Lerp per rendere la transizione più smooth
+        float smoothedTilt = Mathf.LerpAngle(transform.rotation.eulerAngles.x, targetTilt, Time.deltaTime * tiltSpeed);
+
+        transform.rotation = Quaternion.Euler(smoothedTilt, transform.rotation.eulerAngles.y, 0);
     }
 
     void FixedUpdate()

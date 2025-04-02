@@ -33,7 +33,7 @@ public class CameraController : MonoBehaviour
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
         xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -70f, 70f);
+        xRotation = Mathf.Clamp(xRotation, -30f, 70f); // qui ho messo solo -10f perchè non voglio che la camera vada troppo in basso
 
         // Aggiorna la rotazione orizzontale
         yRotation += mouseX;
@@ -50,11 +50,34 @@ public class CameraController : MonoBehaviour
 
     void LateUpdate()
     {
+        // Calcola la posizione desiderata della telecamera
+        Vector3 desiredPosition = player.position - transform.forward * distance + Vector3.up * height;
+
+        // Esegui un Raycast dal giocatore alla posizione desiderata della telecamera
+        RaycastHit hit;
+        if (Physics.Raycast(player.position + Vector3.up * height, (desiredPosition - player.position).normalized, out hit, distance))
+        {
+            // Se il Raycast colpisce un ostacolo, imposta la posizione della telecamera leggermente prima dell'ostacolo
+            transform.position = hit.point;
+        }
+        else
+        {
+            // Nessun ostacolo, posiziona la telecamera normalmente
+            transform.position = Vector3.Lerp(transform.position, desiredPosition, Time.deltaTime * damping);
+        }
+
+        // Fissa la telecamera verso il giocatore
+        transform.LookAt(player);
+    }
+
+
+    /*void LateUpdate()
+    {
         // Calcola la posizione della telecamera
         Vector3 desiredPosition = player.position - transform.forward * distance + Vector3.up * height;
         transform.position = Vector3.Lerp(transform.position, desiredPosition, Time.deltaTime * damping);
 
         // Fissa la telecamera verso il giocatore
         transform.LookAt(player);
-    }
+    }*/
 }

@@ -30,13 +30,13 @@ public class CameraController : MonoBehaviour
         if (!isRightMouseDown)  // questo if SERVE PER BLOCCARE LA VISUALE SE IL TASTO DESTRO è PREMUTO
         {
             float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+            float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -30f, 70f); // qui ho messo solo -10f perchè non voglio che la camera vada troppo in basso
+            xRotation -= mouseY;
+            xRotation = Mathf.Clamp(xRotation, -30f, 70f); // qui ho messo solo -10f perchè non voglio che la camera vada troppo in basso
 
-        // Aggiorna la rotazione orizzontale
-        yRotation += mouseX;
+            // Aggiorna la rotazione orizzontale
+            yRotation += mouseX;
         }
 
         // Gestione dello zoom con la rotellina del mouse
@@ -50,6 +50,7 @@ public class CameraController : MonoBehaviour
 
     void LateUpdate()
     {
+        float jumpOffset = Mathf.Clamp(player.GetComponent<Rigidbody>().velocity.y, -1f, 1f); //aiuta a stabilizzare la camera durante il salto.
         // Calcola la posizione desiderata della telecamera
         Vector3 desiredPosition = player.position - transform.forward * distance + Vector3.up * height;
 
@@ -57,8 +58,12 @@ public class CameraController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(player.position + Vector3.up * height, (desiredPosition - player.position).normalized, out hit, distance))
         {
-            // Se il Raycast colpisce un ostacolo, imposta la posizione della telecamera leggermente prima dell'ostacolo
-            transform.position = hit.point;
+            if (Physics.Raycast(player.position + Vector3.up * height, (desiredPosition - player.position).normalized, out hit, distance))
+            {
+                // Se il Raycast colpisce un ostacolo, calcola la nuova posizione della telecamera
+                float hitDistance = Vector3.Distance(player.position, hit.point) - 0.5f; // Offset per non far toccare la camera
+                desiredPosition = player.position - transform.forward * hitDistance + Vector3.up * (height + jumpOffset);
+            }
         }
         else
         {

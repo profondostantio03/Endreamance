@@ -12,7 +12,7 @@ public class CameraController : MonoBehaviour
     public float zoomSpeed = 2.0f; // Velocità di zoom
     public float minDistance = 5.0f; // Distanza minima della telecamera
     public float maxDistance = 15.0f; // Distanza massima della telecamera
-
+    public LayerMask collisionMask; // Imposta questo in editor per includere solo i layer rilevanti
     private bool isRightMouseDown = false; // gestire il blocco rotazione
 
     void Update()
@@ -56,13 +56,16 @@ public class CameraController : MonoBehaviour
 
         // Esegui un Raycast dal giocatore alla posizione desiderata della telecamera
         RaycastHit hit;
-        if (Physics.Raycast(player.position + Vector3.up * height, (desiredPosition - player.position).normalized, out hit, distance))
+        float sphereRadius = 0.3f; // Regola questo valore in base alla dimensione della camera
+        Vector3 rayOrigin = player.position + Vector3.up * height;
+        Vector3 rayDirection = (desiredPosition - rayOrigin).normalized;
+        if (Physics.SphereCast(rayOrigin, sphereRadius, rayDirection, out hit, distance, collisionMask))
         {
-            if (Physics.Raycast(player.position + Vector3.up * height, (desiredPosition - player.position).normalized, out hit, distance))
+            // Se colpisce il Terrain, regola la posizione della camera
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Terrain"))
             {
-                // Se il Raycast colpisce un ostacolo, calcola la nuova posizione della telecamera
-                float hitDistance = Vector3.Distance(player.position, hit.point) - 0.5f; // Offset per non far toccare la camera
-                desiredPosition = player.position - transform.forward * hitDistance + Vector3.up * (height + jumpOffset);
+                float hitDistance = hit.distance - 0.5f; // Offset per evitare il contatto diretto
+                desiredPosition = player.position - transform.forward * hitDistance + Vector3.up * height;
             }
         }
         else

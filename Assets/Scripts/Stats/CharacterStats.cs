@@ -4,11 +4,37 @@ using UnityEngine;
 
 public class CharacterStats : MonoBehaviour
 {
+    [Header("Health")]
     public int maxHealth = 100;
     public int currentHealth;
-    // Start is called before the first frame update
+
+    [Header("XP / Level")]
+    public int level = 1;
+    public int currentXP = 0;
+    public int xpToNextLevel = 100;
+    public int xpIncrement = 50; // quanto aumenta la soglia ogni livello
+
     void Start()
     {
+        currentHealth = maxHealth;
+    }
+
+    public void GainXP(int amount)
+    {
+        currentXP += amount;
+        while (currentXP >= xpToNextLevel)
+        {
+            currentXP -= xpToNextLevel;
+            LevelUp();
+        }
+    }
+
+    void LevelUp()
+    {
+        level++;
+        xpToNextLevel += xpIncrement;
+
+        maxHealth += 20;
         currentHealth = maxHealth;
     }
 

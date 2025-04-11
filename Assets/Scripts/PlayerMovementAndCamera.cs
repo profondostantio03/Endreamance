@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class PlayerMovementAndCamera : MonoBehaviour
 {
+    private Animator animator;
     public float moveSpeed = 5f; // Velocità di movimento
     public Camera playerCamera; // Riferimento alla telecamera
+
+    void Start()
+    {
+        animator = GetComponent<Animator>();
+    }
 
     void Update()
     {
@@ -30,5 +36,19 @@ public class PlayerMovementAndCamera : MonoBehaviour
 
         // Muovi l'oggetto
         transform.Translate(movement * moveSpeed * Time.deltaTime, Space.World);
+
+
+        // GESTIONE ANIMATOR
+        if (movement.magnitude < 0.1f)
+        {
+            animator.Play("Idle_Normal_SwordAndShield");
+        }
+        else
+        {
+            if (vertical > 0.5f)
+            {
+                animator.Play("MoveFWD_Normal_RM_SwordAndShield");
+            }
+        }
     }
 }

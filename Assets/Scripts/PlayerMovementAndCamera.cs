@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class PlayerMovementAndCamera : MonoBehaviour
 {
-    private Animator animator;
+    private Animator characterAnimator;
+    private float normalSpeed = 0.75f;
+    private float sprintSpeed = 1.25f;
     public float moveSpeed = 5f; // Velocità di movimento
     public Camera playerCamera; // Riferimento alla telecamera
 
     void Start()
     {
-        animator = GetComponent<Animator>();
+        characterAnimator = GetComponent<Animator>();// //sostituito da characterAnimator.SetFloat in Update
     }
 
     void Update()
@@ -50,7 +52,20 @@ public class PlayerMovementAndCamera : MonoBehaviour
                 animator.Play("MoveFWD_Normal_RM_SwordAndShield");
             }
         }*/
-        float moveAmount = movement.magnitude;
-        animator.SetFloat("MoveSpeed", moveAmount);
+
+        float speed = 0;
+
+        if (Input.GetKey(KeyCode.LeftShift) && vertical > 0)
+        {
+            speed = sprintSpeed; // Imposta la velocità normale
+        }
+        else if (vertical > 0)
+        {
+            speed = normalSpeed; // Imposta la velocità normale
+        }
+        characterAnimator.SetFloat("Speed", speed);
+
+        /*float moveAmount = movement.magnitude;
+        characterAnimator.SetFloat("MoveSpeed", moveAmount);*/
     }
 }

@@ -39,7 +39,7 @@ public class PlayerMovementAndCamera : MonoBehaviour
 
 
         // GESTIONE ANIMATOR
-        if (movement.magnitude < 0.1f)
+        /*if (movement.magnitude < 0.1f)
         {
             animator.Play("Idle_Normal_SwordAndShield");
         }
@@ -49,6 +49,8 @@ public class PlayerMovementAndCamera : MonoBehaviour
             {
                 animator.Play("MoveFWD_Normal_RM_SwordAndShield");
             }
-        }
+        }*/
+        float moveAmount = movement.magnitude;
+        animator.SetFloat("MoveSpeed", moveAmount);
     }
 }

@@ -8,11 +8,14 @@ public class PlayerMovementAndCamera : MonoBehaviour
     private float normalSpeed = 0.75f;
     private float sprintSpeed = 1.25f;
     public float moveSpeed = 5f; // Velocità di movimento
+    public float runningSpeed = 6f; // serve per poter aggiornare la velocità del player quando corre
+    public float baseSpeed;
     public Camera playerCamera; // Riferimento alla telecamera
 
     void Start()
     {
         characterAnimator = GetComponent<Animator>();// //sostituito da characterAnimator.SetFloat in Update
+
     }
 
     void Update()
@@ -36,8 +39,16 @@ public class PlayerMovementAndCamera : MonoBehaviour
         // Calcola la direzione del movimento
         Vector3 movement = (cameraForward * vertical + cameraRight * horizontal).normalized;
 
+        if (Input.GetKey(KeyCode.LeftShift) && vertical > 0) // PER CAMBIARE LA SPEED SE SI CORRE
+        {
+            baseSpeed = runningSpeed;
+        }
+        else
+        {
+            baseSpeed = moveSpeed;
+        }
         // Muovi l'oggetto
-        transform.Translate(movement * moveSpeed * Time.deltaTime, Space.World);
+        transform.Translate(movement * baseSpeed * Time.deltaTime, Space.World); // qui moveSpeed si cambia con baseSpeed che avrà due valori differenti a seconda dello sprint
 
 
         // GESTIONE ANIMATOR
@@ -57,11 +68,11 @@ public class PlayerMovementAndCamera : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftShift) && vertical > 0)
         {
-            speed = sprintSpeed; // Imposta la velocità normale
+            speed = sprintSpeed; // Imposta l'animazione per la velocità normale
         }
         else if (vertical > 0)
         {
-            speed = normalSpeed; // Imposta la velocità normale
+            speed = normalSpeed; // Imposta l'animazione per la velocità normale
         }
         characterAnimator.SetFloat("Speed", speed);
 

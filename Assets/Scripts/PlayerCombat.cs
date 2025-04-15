@@ -6,6 +6,7 @@ public class PlayerCombat : MonoBehaviour
 {
     public Animator animator;
     public Transform attackPoint;
+    public GameObject hitEffect;
     public float attackRange = 0.5f;
     public int attackDamage = 20;
     public LayerMask enemyLayers;
@@ -39,6 +40,10 @@ public class PlayerCombat : MonoBehaviour
         foreach (Collider enemy in hitEnemies)
         {
             enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
+            if (hitEffect != null)
+            {
+                Instantiate(hitEffect, enemy.transform.position, Quaternion.identity);
+            }
         }
     }
     void OnDrawGizmosSelected()

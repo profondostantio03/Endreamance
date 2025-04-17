@@ -24,6 +24,10 @@ public class PlayerMovementAndCamera : MonoBehaviour
         float horizontal = Input.GetAxis("Horizontal"); // A/D o Frecce sinistra/destra
         float vertical = Input.GetAxis("Vertical"); // W/S o Frecce su/giù
 
+        // per la gestione dell'animator
+        characterAnimator.SetFloat("MoveX", horizontal);
+        characterAnimator.SetFloat("MoveY", vertical);
+
         // Crea un vettore di movimento basato sulla direzione della telecamera
         Vector3 cameraForward = playerCamera.transform.forward;
         Vector3 cameraRight = playerCamera.transform.right;
@@ -39,14 +43,24 @@ public class PlayerMovementAndCamera : MonoBehaviour
         // Calcola la direzione del movimento
         Vector3 movement = (cameraForward * vertical + cameraRight * horizontal).normalized;
 
-        if (Input.GetKey(KeyCode.LeftShift) && vertical > 0) // PER CAMBIARE LA SPEED SE SI CORRE
+        bool isSprinting = Input.GetKey(KeyCode.LeftShift) && vertical > 0;
+
+        baseSpeed = isSprinting ? runningSpeed : moveSpeed;
+
+        // per aggiornare lo stato delle animazioni
+
+        characterAnimator.SetFloat("MoveX", horizontal);
+        characterAnimator.SetFloat("MoveY", vertical);
+        characterAnimator.SetBool("isSprinting", isSprinting);
+
+        /*if (Input.GetKey(KeyCode.LeftShift) && vertical > 0) // PER CAMBIARE LA SPEED SE SI CORRE
         {
             baseSpeed = runningSpeed;
         }
         else
         {
             baseSpeed = moveSpeed;
-        }
+        }*/
         // Muovi l'oggetto
         transform.Translate(movement * baseSpeed * Time.deltaTime, Space.World); // qui moveSpeed si cambia con baseSpeed che avrà due valori differenti a seconda dello sprint
 

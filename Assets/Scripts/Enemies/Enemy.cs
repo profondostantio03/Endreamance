@@ -68,4 +68,8 @@ public class Enemy : MonoBehaviour
 
         Destroy(gameObject); // Lo elimina dopo che si è abbassato il canale alfa
     }
+    public bool IsDying()
+    {
+        return isDying;
+    }
 }

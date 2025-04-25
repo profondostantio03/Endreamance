@@ -8,7 +8,10 @@ public class Inventory : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        for (int i = 0; i < slots.Length; i++)
+        {
+            slots[i] = new InvSlot();
+        }
     }
 
     // Update is called once per frame
@@ -23,6 +26,7 @@ public class Inventory : MonoBehaviour
             if (slots[i].item == item && item.isStackable)
             {
                 slots[i].AddItem(item, amount);
+                Debug.Log("Item aggiunto a slot esistente");
                 return;
             }
         }
@@ -31,6 +35,7 @@ public class Inventory : MonoBehaviour
             if (slots[i].item == null)
             {
                 slots[i].AddItem(item, amount);
+                Debug.Log("Item aggiunto a nuovo slot");
                 return;
             }
         }

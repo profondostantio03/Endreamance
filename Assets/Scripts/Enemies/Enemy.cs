@@ -12,7 +12,6 @@ public class Enemy : MonoBehaviour
     private bool isDying = false;
     private Renderer rend;
     public GameObject dropPrefab; // prefab "DroppedItem"
-    public Item itemToDrop;      // item da droppare
     public int dropAmount = 1;
     public bool itemToDropDroppable = true;
     // Start is called before the first frame update
@@ -61,42 +60,38 @@ public class Enemy : MonoBehaviour
                 dropScript.quantity = dropAmount;
             }
         }*/
-        if (keyItem != null)
-        {
-            if (keyItemDroppable && dropPrefab != null)
+            /*if (keyItemDroppable && dropPrefab != null)
             {
                 GameObject droppedObj = Instantiate(dropPrefab, transform.position, Quaternion.identity);
                 DroppedItem dropScript = droppedObj.GetComponent<DroppedItem>();
                 if (dropScript != null)
                 {
                     dropScript.item = keyItem;
-                    dropScript.quantity = 1;
+                    dropScript.quantity = dropAmount;
                 }
-            }
-            else if (playerInventory != null)
-            {
-                playerInventory.Add(keyItem, 1);
-                Debug.Log("Aggiunta direttamente la Key all'inventario!");
-            }
-        }
+            }*/
 
-        // GESTIONE eventuale altro oggetto (tipo oro, materiali, ecc.)
-        if (itemToDrop != null)
+        if (keyItem != null)
         {
-            if (itemToDropDroppable && dropPrefab != null)
+            if (keyItemDroppable)
             {
                 GameObject droppedObj = Instantiate(dropPrefab, transform.position, Quaternion.identity);
                 DroppedItem dropScript = droppedObj.GetComponent<DroppedItem>();
                 if (dropScript != null)
                 {
-                    dropScript.item = itemToDrop;
-                    dropScript.quantity = dropAmount;
+                   dropScript.item = keyItem;
+                   dropScript.quantity = dropAmount;
                 }
+                Debug.Log("Oggetto droppato a terra: " + keyItem.itemName);
             }
-            else if (playerInventory != null)
+            else
             {
-                playerInventory.Add(itemToDrop, dropAmount);
-                Debug.Log("Aggiunto direttamente item secondario all'inventario!");
+                Inventory playerInventory = FindObjectOfType<Inventory>(); 
+                if (playerInventory != null)
+                {
+                    playerInventory.Add(keyItem, dropAmount);
+                    Debug.Log("Aggiunta direttamente la Key all'inventario!");
+                }
             }
         }
         //Destroy(gameObject);

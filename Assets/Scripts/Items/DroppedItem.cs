@@ -19,16 +19,17 @@ public class DroppedItem : MonoBehaviour
         
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter(Collider collision)
     {
         Debug.Log("Oggetto entrato: " + collision.gameObject.name);
         if (collision.CompareTag("Player"))
         {
-            Inventory inventory = collision.GetComponent<Inventory>();
-            if (inventory != null)
+            Debug.Log("Collisione avvenuta");
+            Inventory playerInventory = FindObjectOfType<Inventory>();
+            if (playerInventory != null)
             {
                 Debug.Log($"Tentativo di aggiungere {item.itemName} x{quantity} all'inventario.");
-                inventory.Add(item, quantity);
+                playerInventory.Add(item, quantity);
                 Debug.Log($"Raccolto {item.itemName} x{quantity}");
                 Destroy(gameObject);
             }

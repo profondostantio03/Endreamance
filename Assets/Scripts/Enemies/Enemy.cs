@@ -5,14 +5,22 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public int maxHealth = 100;
+    public Item keyItem;
+    public bool keyItemDroppable = false;
+    private Inventory playerInventory; 
     private int currentHealth;
     private bool isDying = false;
     private Renderer rend;
+    public GameObject dropPrefab; // prefab "DroppedItem"
+    public Item itemToDrop;      // item da droppare
+    public int dropAmount = 1;
+    public bool itemToDropDroppable = true;
     // Start is called before the first frame update
     void Start()
     {
         currentHealth = maxHealth;
         rend = GetComponentInChildren<Renderer>();
+        playerInventory = FindObjectOfType<Inventory>(); // Trova l'inventario nella scena
     }
 
     // Update is called once per frame
@@ -36,6 +44,61 @@ public class Enemy : MonoBehaviour
         Debug.Log("Enemy died!");
         // Si possono mettere le varie animazioni suoni etc
         StartCoroutine(FadeAndDie());
+        /*if (keyItem != null && playerInventory != null)
+        {
+            playerInventory.Add(keyItem, 1);
+            Debug.Log("Aggiunta chiave all'inventario!");
+        }
+
+        if (dropPrefab != null)
+        {
+            GameObject droppedObj = Instantiate(dropPrefab, transform.position, Quaternion.identity);
+
+            DroppedItem dropScript = droppedObj.GetComponent<DroppedItem>();
+            if (dropScript != null)
+            {
+                dropScript.item = itemToDrop;
+                dropScript.quantity = dropAmount;
+            }
+        }*/
+        if (keyItem != null)
+        {
+            if (keyItemDroppable && dropPrefab != null)
+            {
+                GameObject droppedObj = Instantiate(dropPrefab, transform.position, Quaternion.identity);
+                DroppedItem dropScript = droppedObj.GetComponent<DroppedItem>();
+                if (dropScript != null)
+                {
+                    dropScript.item = keyItem;
+                    dropScript.quantity = 1;
+                }
+            }
+            else if (playerInventory != null)
+            {
+                playerInventory.Add(keyItem, 1);
+                Debug.Log("Aggiunta direttamente la Key all'inventario!");
+            }
+        }
+
+        // GESTIONE eventuale altro oggetto (tipo oro, materiali, ecc.)
+        if (itemToDrop != null)
+        {
+            if (itemToDropDroppable && dropPrefab != null)
+            {
+                GameObject droppedObj = Instantiate(dropPrefab, transform.position, Quaternion.identity);
+                DroppedItem dropScript = droppedObj.GetComponent<DroppedItem>();
+                if (dropScript != null)
+                {
+                    dropScript.item = itemToDrop;
+                    dropScript.quantity = dropAmount;
+                }
+            }
+            else if (playerInventory != null)
+            {
+                playerInventory.Add(itemToDrop, dropAmount);
+                Debug.Log("Aggiunto direttamente item secondario all'inventario!");
+            }
+        }
         //Destroy(gameObject);
     }
     IEnumerator FadeAndDie()

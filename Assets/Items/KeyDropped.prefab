@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7616649087206333425}
   - component: {fileID: 3092556192868137421}
   - component: {fileID: 5000082721332114672}
+  - component: {fileID: 7411600850397014935}
   m_Layer: 0
   m_Name: KeyDropped
   m_TagString: Untagged
@@ -121,3 +122,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: a6159e47224540e4183db529e57f3bfb, type: 2}
   quantity: 1
+--- !u!114 &7411600850397014935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4392671422222209146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e8aaa68b0b50634e8191983de8061f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectedColor: 4

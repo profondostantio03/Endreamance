@@ -7,6 +7,10 @@ using UnityEngine.EventSystems;
 
 public class INVisual : MonoBehaviour
 {
+    public GameObject dragIcon;
+    private Image dragIconImage;
+    private int draggedSlotIndex = -1;
+    private int draggedFromSlot = -1;
     public Inventory inventory;
     [System.Serializable]
     public class SlotUI
@@ -25,6 +29,12 @@ public class INVisual : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+            if (dragIcon != null)
+            {
+                dragIconImage = dragIcon.GetComponent<Image>();
+                dragIcon.SetActive(false);
+            }
+
         for (int i = 0; i < slotsUI.Length; i++)
         {
             if (slotsUI[i].icon != null)
@@ -101,4 +111,42 @@ public class INVisual : MonoBehaviour
             yield return null;
         }
     }
+    public void StartDragging(int slotIndex, Sprite itemSprite)
+    {
+        draggedSlotIndex = slotIndex;
+        dragIconImage.sprite = itemSprite;
+        dragIcon.SetActive(true);
+    }
+
+    public void StopDragging()
+    {
+        dragIcon.SetActive(false);
+        draggedSlotIndex = -1;
+    }
+
+    private int GetSlotUnderMouse()
+    {
+        PointerEventData pointer = new PointerEventData(EventSystem.current);
+        pointer.position = Input.mousePosition;
+
+        List<RaycastResult> hits = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointer, hits);
+
+        foreach (var hit in hits)
+        {
+            var slotUI = hit.gameObject.GetComponent<InvSlotUI>();
+            if (slotUI != null)
+                return slotUI.slotIndex;
+        }
+        return -1;
+    }
+
+    public void UpdateDragPosition(Vector2 screenPosition)
+    {
+        if (dragIcon != null && dragIcon.activeSelf)
+        {
+            dragIcon.transform.position = screenPosition;
+        }
+    }
+
 }

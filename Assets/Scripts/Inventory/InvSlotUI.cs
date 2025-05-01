@@ -9,11 +9,9 @@ public class InvSlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler,
     public int slotIndex;
     public INVisual inventoryUI;
 
-    private Image draggedIcon;
-
     public void OnPointerClick(PointerEventData eventData)
     {
-        
+
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -35,18 +33,25 @@ public class InvSlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler,
     public void OnEndDrag(PointerEventData eventData)
     {
         Debug.Log("end drag");
+        int targetIndex = inventoryUI.GetSlotUnderMouse();
+
+        // Se ho rilasciato su uno slot valido e diverso
+        if (targetIndex != -1 && targetIndex != slotIndex)
+        {
+            inventoryUI.SwapItems(slotIndex, targetIndex);
+        }
         inventoryUI.StopDragging();
     }
-    
+
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

@@ -10,15 +10,15 @@ public class INVisual : MonoBehaviour
     public GameObject dragIcon;
     private Image dragIconImage;
     private int draggedSlotIndex = -1;
-    private int draggedFromSlot = -1;
+    
     public Inventory inventory;
     [System.Serializable]
     public class SlotUI
     {
         public Image icon;
-        public TMP_Text itemNameText; // Nome + quantità
+        public TMP_Text itemNameText; // Nome + quantita
 
-        [HideInInspector] public RectTransform slotZoom; 
+        [HideInInspector] public RectTransform slotZoom;
         [HideInInspector] public Vector3 originalScale;
     }
 
@@ -29,11 +29,11 @@ public class INVisual : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-            if (dragIcon != null)
-            {
-                dragIconImage = dragIcon.GetComponent<Image>();
-                dragIcon.SetActive(false);
-            }
+        if (dragIcon != null)
+        {
+            dragIconImage = dragIcon.GetComponent<Image>();
+            dragIcon.SetActive(false);
+        }
 
         for (int i = 0; i < slotsUI.Length; i++)
         {
@@ -41,6 +41,9 @@ public class INVisual : MonoBehaviour
             {
                 slotsUI[i].slotZoom = slotsUI[i].icon.GetComponent<RectTransform>();
                 slotsUI[i].originalScale = slotsUI[i].slotZoom.localScale;
+
+                // Assicurati che l'immagine dell'item abbia il Raycast Target attivato
+                slotsUI[i].icon.raycastTarget = true;
 
                 EventTrigger trigger = slotsUI[i].icon.GetComponent<EventTrigger>();
                 if (trigger == null)
@@ -64,6 +67,11 @@ public class INVisual : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        UpdateUI();
+    }
+
+    public void UpdateUI()
+    {
         for (int i = 0; i < slotsUI.Length; i++)
         {
             var slot = inventory.slots[i];
@@ -72,7 +80,6 @@ public class INVisual : MonoBehaviour
                 slotsUI[i].icon.sprite = slot.item.icon;
                 slotsUI[i].icon.enabled = true;
 
-                // gestione stringa nomeOggetto + quantità
                 string displayText = slot.item.itemName;
                 if (slot.item.isStackable && slot.quantity > 1)
                 {
@@ -88,6 +95,7 @@ public class INVisual : MonoBehaviour
             }
         }
     }
+
     void OnHoverEnter(int index)
     {
         StopAllCoroutines();
@@ -121,10 +129,10 @@ public class INVisual : MonoBehaviour
     public void StopDragging()
     {
         dragIcon.SetActive(false);
-        draggedSlotIndex = -1;
+        draggedSlotIndex = -1; // Reset dell'indice prima di uscire
     }
 
-    private int GetSlotUnderMouse()
+    public int GetSlotUnderMouse()
     {
         PointerEventData pointer = new PointerEventData(EventSystem.current);
         pointer.position = Input.mousePosition;
@@ -134,9 +142,19 @@ public class INVisual : MonoBehaviour
 
         foreach (var hit in hits)
         {
-            var slotUI = hit.gameObject.GetComponent<InvSlotUI>();
+            // Cerca prima direttamente nello slot UI
+            InvSlotUI slotUI = hit.gameObject.GetComponent<InvSlotUI>();
             if (slotUI != null)
+            {
                 return slotUI.slotIndex;
+            }
+
+            // Se non lo trova, cerca nei parent
+            slotUI = hit.gameObject.GetComponentInParent<InvSlotUI>();
+            if (slotUI != null)
+            {
+                return slotUI.slotIndex;
+            }
         }
         return -1;
     }
@@ -149,4 +167,12 @@ public class INVisual : MonoBehaviour
         }
     }
 
+    public void SwapItems(int fromIndex, int toIndex)
+    {
+        var temp = inventory.slots[fromIndex];
+        inventory.slots[fromIndex] = inventory.slots[toIndex];
+        inventory.slots[toIndex] = temp;
+
+        UpdateUI();
+    }
 }

@@ -5,6 +5,9 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public int maxHealth = 100;
+    public int damage = 10;
+    public float attackCooldown = 1f;
+    private float lastAttackTime = 0f;
     public Item keyItem;
     public bool keyItemDroppable = false;
     private Inventory playerInventory; 
@@ -126,6 +129,21 @@ public class Enemy : MonoBehaviour
 
         Destroy(gameObject); // Lo elimina dopo che si è abbassato il canale alfa
     }
+
+    void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Player") && Time.time - lastAttackTime > attackCooldown)
+        {
+            Debug.Log("attacco subito");
+            CharacterStats playerHealth = other.GetComponent<CharacterStats>();
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage(damage);
+                lastAttackTime = Time.time;
+            }
+        }
+    }
+
     public bool IsDying()
     {
         return isDying;

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8137017267684767861}
   - component: {fileID: 8305724971389414628}
   - component: {fileID: 742589322242827873}
+  - component: {fileID: 4797730556382733701}
   - component: {fileID: 3675109331481718847}
   - component: {fileID: 6822196805057970499}
   - component: {fileID: 8547214415585278429}
@@ -102,7 +103,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -110,6 +111,33 @@ CapsuleCollider:
   m_Height: 2.1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &4797730556382733701
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6827559393582859953}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!114 &3675109331481718847
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,6 +151,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  damage: 10
+  attackCooldown: 1
   keyItem: {fileID: 11400000, guid: a6159e47224540e4183db529e57f3bfb, type: 2}
   keyItemDroppable: 1
   dropPrefab: {fileID: 4392671422222209146, guid: f452d59f870f7c54eb3760685b26b3ea, type: 3}

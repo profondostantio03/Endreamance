@@ -135,10 +135,10 @@ public class Enemy : MonoBehaviour
         if (other.CompareTag("Player") && Time.time - lastAttackTime > attackCooldown)
         {
             Debug.Log("attacco subito");
-            CharacterStats playerHealth = other.GetComponent<CharacterStats>();
-            if (playerHealth != null)
+            CharacterStats stats = other.GetComponent<CharacterStats>();
+            if (stats != null)
             {
-                playerHealth.TakeDamage(damage);
+                stats.TakeDamage(damage);
                 lastAttackTime = Time.time;
             }
         }

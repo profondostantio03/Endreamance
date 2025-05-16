@@ -133,7 +133,7 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _Rotation: 35
+    - _Rotation: 21.199596
     - _Rotation1: 0
     - _Rotation2: 0
     - _RotationSpeed: 1
@@ -148,7 +148,7 @@ Material:
     - _BackgroundColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Tint: {r: 0.29088277, g: 0.22381999, b: 0.33469215, a: 0.7255059}
+    - _Tint: {r: 0.509, g: 0.462, b: 0.541, a: 1}
     - _Tint1: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
     - _Tint2: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
     - _TintColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}

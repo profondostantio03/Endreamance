@@ -5,7 +5,7 @@ using UnityEngine.Experimental.GlobalIllumination;
 
 public class DayNightCycle : MonoBehaviour
 {
-    [SerializeField] private float dayLength = 60f;
+    [SerializeField] public float dayLength = 60f;
     [SerializeField] private Light directionalLight;
     [SerializeField] private Material skyboxMaterial;
     [SerializeField] private float skyboxRotationSpeed = 1f;

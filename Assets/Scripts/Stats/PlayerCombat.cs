@@ -32,6 +32,10 @@ public class PlayerCombat : MonoBehaviour
     }
     void Attack()
     {
+        if (PauseMenu.instance.isPaused) // serve per non far prendere i click dell'attacco mentre è aperto il menu di pausa, va a richiamare l'instance di PauseMenu.cs
+        {
+            return;
+        }
         animator.SetTrigger("Attack");
 
         // Collision detection

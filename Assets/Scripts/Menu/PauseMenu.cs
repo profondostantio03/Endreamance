@@ -4,22 +4,42 @@ using UnityEngine;
 
 public class PauseMenu : MonoBehaviour
 {
+    public static PauseMenu instance { get; private set; }
     public GameObject PauseMenuUI;
-    private bool isPaused = false;
-    // Start is called before the first frame update
-    void Start()
+    public bool isPaused = false;
+    private bool isResuming = false;
+    private float inputBlockDuration = 0.5f;
+
+    private void Awake()
     {
-        
+        if (instance == null)
+        {
+            instance = this;
+        }
     }
 
-    // Update is called once per frame
+    void Start()
+    {
+        PauseMenuUI.SetActive(false);
+    }
+
     void Update()
     {
+        if (isResuming)
+        {
+            return;
+        }
+
+        if (Input.GetMouseButtonDown(0) && isPaused)
+        {
+            return;
+        }
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (isPaused)
             {
-                Continue();
+                ContinueWithDelay();
             }
             else
             {
@@ -31,15 +51,31 @@ public class PauseMenu : MonoBehaviour
     public void Pause()
     {
         PauseMenuUI.SetActive(true);
-        Time.timeScale = 0;
+        Time.timeScale = 0f;
         isPaused = true;
     }
 
     public void Continue()
     {
         PauseMenuUI.SetActive(false);
-        Time.timeScale = 1;
+        Time.timeScale = 1f;
         isPaused = false;
     }
 
+    public void ContinueWithDelay()
+    {
+        if (isResuming) return;
+        isResuming = true;
+        StartCoroutine(ResumeAfterDelay(inputBlockDuration));
+    }
+
+    public IEnumerator ResumeAfterDelay(float delay)
+    {
+        yield return new WaitForSecondsRealtime(delay);
+
+        PauseMenuUI.SetActive(false);
+        Time.timeScale = 1f;
+        isPaused = false;
+        isResuming = false;
+    }
 }

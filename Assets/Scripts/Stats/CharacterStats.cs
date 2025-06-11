@@ -36,6 +36,14 @@ public class CharacterStats : MonoBehaviour
 
         maxHealth += 20;
         currentHealth = maxHealth;
+
+        int rewardCoins = CalculateLevelUpReward(level);
+        CoinsManager.Instance.AddCoins(rewardCoins);
+    }
+
+    int CalculateLevelUpReward(int level) // ricompensa per ogni level up
+    {
+        return 0 + (level - 1) * 5; // ex. 0 base + 5 per livello
     }
 
     // Update is called once per frame

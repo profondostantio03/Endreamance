@@ -13,6 +13,19 @@ public class DroppedItem : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
 
+        if (item.itemPrefab != null)
+        {
+            GameObject model = Instantiate(item.itemPrefab, transform.position, Quaternion.identity);
+            model.transform.SetParent(transform);
+
+            // Se il modello ha un proprio Rigidbody, lo disabilita
+            Rigidbody modelRb = model.GetComponent<Rigidbody>();
+            if (modelRb != null)
+            {
+                Destroy(modelRb);
+            }
+        }
+
         if (rb != null)
         {
             // Applica una piccola "spinta" verso l'alto e in direzione casuale

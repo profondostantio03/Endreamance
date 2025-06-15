@@ -153,9 +153,9 @@ MonoBehaviour:
   maxHealth: 100
   damage: 10
   attackCooldown: 1
-  keyItem: {fileID: 11400000, guid: a6159e47224540e4183db529e57f3bfb, type: 2}
+  keyItem: {fileID: 11400000, guid: 5e45c78bd4fd55c428448456222da786, type: 2}
   keyItemDroppable: 1
-  dropPrefab: {fileID: 4392671422222209146, guid: f452d59f870f7c54eb3760685b26b3ea, type: 3}
+  dropPrefab: {fileID: 6215100066667016001, guid: 84331dfb1e4fe2941bdb5be20a0cac03, type: 3}
   dropAmount: 1
   itemToDropDroppable: 1
 --- !u!114 &6822196805057970499

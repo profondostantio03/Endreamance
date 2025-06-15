@@ -8,5 +8,4 @@ public class Item : ScriptableObject
     public string itemName;
     public Sprite icon;
     public bool isStackable;
-    public GameObject itemPrefab;
 }

@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de23fce6564173142961be8cfdfbac47, type: 3}
   m_Name: KeyEnemy1
   m_EditorClassIdentifier: 
-  itemName: KeyEnemy1
+  itemName: Key
   icon: {fileID: 21300000, guid: ee431a8a07528b2469b1fa2a258dc394, type: 3}
   isStackable: 1
-  itemPrefab: {fileID: 0}

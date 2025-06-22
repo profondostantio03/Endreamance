@@ -43,10 +43,14 @@ public class PlayerCombat : MonoBehaviour
 
         foreach (Collider enemy in hitEnemies)
         {
-            enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
-            if (hitEffect != null)
+            EnyDamageable damageable = enemy.GetComponent<EnyDamageable>();
+            if (damageable != null)
             {
-                Instantiate(hitEffect, enemy.transform.position, Quaternion.identity);
+                damageable.TakeDamage(attackDamage);
+                if (hitEffect != null)
+                {
+                    Instantiate(hitEffect, enemy.transform.position, Quaternion.identity);
+                }
             }
         }
     }

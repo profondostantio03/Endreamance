@@ -2,19 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour, EnyDamageable
+public class EnyMinion : MonoBehaviour, EnyDamageable
 {
-    public int maxHealth = 100;
+    public int maxHealth = 50;
     public int damage = 10;
     public float attackCooldown = 1f;
     private float lastAttackTime = 0f;
     public Item keyItem;
     public bool keyItemDroppable = false;
-    private Inventory playerInventory; 
+    private Inventory playerInventory;
     private int currentHealth;
     private bool isDying = false;
     private Renderer rend;
-    public GameObject dropPrefab; // prefab "DroppedItem"
+    public GameObject dropPrefab;
     public int dropAmount = 1;
     public bool itemToDropDroppable = true;
     // Start is called before the first frame update
@@ -22,13 +22,13 @@ public class Enemy : MonoBehaviour, EnyDamageable
     {
         currentHealth = maxHealth;
         rend = GetComponentInChildren<Renderer>();
-        playerInventory = FindObjectOfType<Inventory>(); // Trova l'inventario nella scena
+        playerInventory = FindObjectOfType<Inventory>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
     public void TakeDamage(int damage)
     {
@@ -46,33 +46,6 @@ public class Enemy : MonoBehaviour, EnyDamageable
         Debug.Log("Enemy died!");
         // Si possono mettere le varie animazioni suoni etc
         StartCoroutine(FadeAndDie());
-        /*if (keyItem != null && playerInventory != null)
-        {
-            playerInventory.Add(keyItem, 1);
-            Debug.Log("Aggiunta chiave all'inventario!");
-        }
-
-        if (dropPrefab != null)
-        {
-            GameObject droppedObj = Instantiate(dropPrefab, transform.position, Quaternion.identity);
-
-            DroppedItem dropScript = droppedObj.GetComponent<DroppedItem>();
-            if (dropScript != null)
-            {
-                dropScript.item = itemToDrop;
-                dropScript.quantity = dropAmount;
-            }
-        }*/
-            /*if (keyItemDroppable && dropPrefab != null)
-            {
-                GameObject droppedObj = Instantiate(dropPrefab, transform.position, Quaternion.identity);
-                DroppedItem dropScript = droppedObj.GetComponent<DroppedItem>();
-                if (dropScript != null)
-                {
-                    dropScript.item = keyItem;
-                    dropScript.quantity = dropAmount;
-                }
-            }*/
 
         if (keyItem != null)
         {
@@ -82,14 +55,14 @@ public class Enemy : MonoBehaviour, EnyDamageable
                 DroppedItem dropScript = droppedObj.GetComponent<DroppedItem>();
                 if (dropScript != null)
                 {
-                   dropScript.item = keyItem;
-                   dropScript.quantity = dropAmount;
+                    dropScript.item = keyItem;
+                    dropScript.quantity = dropAmount;
                 }
                 Debug.Log("Oggetto droppato a terra: " + keyItem.itemName);
             }
             else
             {
-                Inventory playerInventory = FindObjectOfType<Inventory>(); 
+                Inventory playerInventory = FindObjectOfType<Inventory>();
                 if (playerInventory != null)
                 {
                     playerInventory.Add(keyItem, dropAmount);
@@ -130,12 +103,12 @@ public class Enemy : MonoBehaviour, EnyDamageable
         Destroy(gameObject); // Lo elimina dopo che si è abbassato il canale alfa
     }
 
-    void OnCollisionStay(Collision collision)
+    void OnTriggerStay(Collider other)
     {
-        if (collision.gameObject.CompareTag("Player") && Time.time - lastAttackTime > attackCooldown)
+        if (other.CompareTag("Player") && Time.time - lastAttackTime > attackCooldown)
         {
             Debug.Log("attacco subito");
-            CharacterStats stats = collision.gameObject.GetComponent<CharacterStats>();
+            CharacterStats stats = other.GetComponent<CharacterStats>();
             if (stats != null)
             {
                 stats.TakeDamage(damage);
@@ -143,7 +116,6 @@ public class Enemy : MonoBehaviour, EnyDamageable
             }
         }
     }
-
 
     public bool IsDying()
     {

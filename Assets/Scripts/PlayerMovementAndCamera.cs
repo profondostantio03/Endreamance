@@ -7,6 +7,7 @@ public class PlayerMovementAndCamera : MonoBehaviour
     private Animator characterAnimator;
     private float normalSpeed = 0.75f;
     private float sprintSpeed = 1.25f;
+    private float speedMultiplier = 1f;
     public float moveSpeed = 5f; // Velocità di movimento
     public float runningSpeed = 6f; // serve per poter aggiornare la velocità del player quando corre
     public float baseSpeed;
@@ -45,7 +46,7 @@ public class PlayerMovementAndCamera : MonoBehaviour
 
         bool isSprinting = Input.GetKey(KeyCode.LeftShift) && vertical > 0;
 
-        baseSpeed = isSprinting ? runningSpeed : moveSpeed;
+        baseSpeed = (isSprinting ? runningSpeed : moveSpeed) * speedMultiplier;
 
         // per aggiornare lo stato delle animazioni
 
@@ -93,4 +94,17 @@ public class PlayerMovementAndCamera : MonoBehaviour
         /*float moveAmount = movement.magnitude;
         characterAnimator.SetFloat("MoveSpeed", moveAmount);*/
     }
+
+    // PER LA GESTIONE DEL PIANO SPEEDBOOSTER ALLO SPAWN, O IN OGNI CASO PER FAR FUNZIONARE QUALSIASI OGGETTO CON LO SCRIPT SpeedBooster.cs
+    public void SetSpeedMultiplier(float multiplier)
+    {
+        speedMultiplier = multiplier;
+    }
+
+    public void ResetSpeedMultiplier()
+    {
+        speedMultiplier = 1f;
+    }
+
+
 }

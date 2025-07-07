@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -12,6 +12,17 @@ public class NPCSystem : MonoBehaviour
     public GameObject canva;
     public GameObject conversationTemplate;
     public List<string> dialogueLines = new List<string>();
+    public float typingSpeed = 0.02f;
+    private Coroutine typingCoroutine;
+
+    public GameObject playerObject; // Assegna il Player da Inspector
+    private PlayerMovementAndCamera playerMovement;
+    public bool givesQuest = false;
+    public string questID;
+    private bool questGiven = false;
+
+    public GameObject choicesPanel;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +30,12 @@ public class NPCSystem : MonoBehaviour
         dialogueLines.Add("Presta attenzione in questo paese, non e' tutto oro quel che luccica.");
         dialogueLines.Add("Non perdere di vista la tua luce.");
 
+        if (playerObject != null)
+            playerMovement = playerObject.GetComponent<PlayerMovementAndCamera>();
+
         canva.SetActive(false); // Nascondi canvas all'inizio
+        if (choicesPanel != null)
+            choicesPanel.SetActive(false);
     }
 
     // Update is called once per frame
@@ -43,6 +59,10 @@ public class NPCSystem : MonoBehaviour
         dialogueActive = true;
         currentLineIndex = 0;
         canva.SetActive(true);
+
+        if (playerMovement != null)
+            playerMovement.enabled = false;
+
         ShowCurrentLine();
     }
 
@@ -55,7 +75,14 @@ public class NPCSystem : MonoBehaviour
         }
         else
         {
-            EndDialogue();
+            if (givesQuest && !questGiven)
+            {
+                ShowChoices(); // Fine dialogo → mostra opzioni
+            }
+            else
+            {
+                EndDialogue();
+            }
         }
     }
 
@@ -69,13 +96,58 @@ public class NPCSystem : MonoBehaviour
 
         // Crea nuova battuta e mostra testo corrente
         GameObject templateClone = Instantiate(conversationTemplate, canva.transform);
-        templateClone.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = dialogueLines[currentLineIndex];
+        TextMeshProUGUI textUI = templateClone.GetComponentInChildren<TextMeshProUGUI>();
+
+        if (typingCoroutine != null)
+            StopCoroutine(typingCoroutine);
+
+        // Avvia il typewriter effect
+        typingCoroutine = StartCoroutine(TypeText(textUI, dialogueLines[currentLineIndex]));
+    }
+
+    IEnumerator TypeText(TextMeshProUGUI textComponent, string line)
+    {
+        textComponent.text = "";
+        foreach (char c in line)
+        {
+            textComponent.text += c;
+            yield return new WaitForSeconds(typingSpeed);
+        }
     }
 
     void EndDialogue()
     {
         dialogueActive = false;
         canva.SetActive(false);
+        if (playerMovement != null)
+            playerMovement.enabled = true;
+
+        if (choicesPanel != null)
+            choicesPanel.SetActive(false);
+    }
+
+    void ShowChoices()
+    {
+        if (choicesPanel != null)
+        {
+            canva.SetActive(false);
+            choicesPanel.SetActive(true);
+        }
+    }
+
+    // chiamata da un bottone UI
+    public void AcceptQuest()
+    {
+        Debug.Log("Missione accettata: " + questID);
+        questGiven = true;
+        EndDialogue();
+        // segnare nel QuestManager globale
+    }
+
+    public void DeclineQuest()
+    {
+        Debug.Log("Missione rifiutata");
+        EndDialogue();
     }
 
     void OnTriggerEnter(Collider other)

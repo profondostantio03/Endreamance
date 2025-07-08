@@ -28,6 +28,7 @@ public class NPCSystem : MonoBehaviour
     {
         dialogueLines.Add("Ciao viaggiatore.");
         dialogueLines.Add("Presta attenzione in questo paese, non e' tutto oro quel che luccica.");
+        dialogueLines.Add("*CHOICE*");
         dialogueLines.Add("Non perdere di vista la tua luce.");
 
         if (playerObject != null)
@@ -71,18 +72,18 @@ public class NPCSystem : MonoBehaviour
         currentLineIndex++;
         if (currentLineIndex < dialogueLines.Count)
         {
-            ShowCurrentLine();
-        }
-        else
-        {
-            if (givesQuest && !questGiven)
+            if (dialogueLines[currentLineIndex] == "*CHOICE*") //per far comparire il panel della scelta durante il dialogo
             {
-                ShowChoices(); // Fine dialogo → mostra opzioni
+                TriggerChoice();
             }
             else
             {
-                EndDialogue();
+                ShowCurrentLine();
             }
+        }
+        else
+        {
+                EndDialogue();
         }
     }
 
@@ -132,6 +133,17 @@ public class NPCSystem : MonoBehaviour
         {
             canva.SetActive(false);
             choicesPanel.SetActive(true);
+        }
+    }
+
+    public void TriggerChoice()
+    {
+        if (dialogueActive && !questGiven && givesQuest)
+        {
+            if (typingCoroutine != null)
+                StopCoroutine(typingCoroutine);
+
+            ShowChoices();
         }
     }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HealingZone : MonoBehaviour
 {
-    public float interactionDistance = 3f;
+    public float interactionDistance = 5f;
     public string interactionKey = "p";
     public GameObject player;
     public GameObject uiTextObject;
@@ -33,6 +33,7 @@ public class HealingZone : MonoBehaviour
 
         if (distance <= interactionDistance)
         {
+            Debug.Log("sei nel range della healing zone");
             if (!isInRange)
             {
                 isInRange = true;

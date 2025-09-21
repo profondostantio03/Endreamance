@@ -5,6 +5,7 @@ public class CameraController : MonoBehaviour
     public Transform player; // Riferimento al giocatore
     public float distance = 10.0f; // Distanza dalla telecamera al giocatore
     public float height = 5.0f; // Altezza della telecamera
+    public float lookAtOffset = 3.0f; // Offset per l'altezza della camera rispetto al player, per far risultrare al centro dello schermo il player va messo a 0
     public float damping = 3.0f; // Velocità di damping
     public float mouseSensitivity = 70.0f; // di default dovrebbe essere a 100.0f
     private float xRotation = 0.0f;
@@ -75,7 +76,7 @@ public class CameraController : MonoBehaviour
         }
 
         // Fissa la telecamera verso il giocatore
-        transform.LookAt(player);
+        transform.LookAt(player.position + Vector3.up * lookAtOffset);
     }
 
 

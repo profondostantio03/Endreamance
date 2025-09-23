@@ -8,6 +8,7 @@ public class PlayerCombat : MonoBehaviour
     public Transform attackPoint;
     public GameObject hitEffect;
     public GameObject damagePopup;
+    public DamagePopupSpawn popupSpawner;
     public float attackRange = 0.5f;
     public int attackDamage = 20;
     public LayerMask enemyLayers;
@@ -52,10 +53,9 @@ public class PlayerCombat : MonoBehaviour
                 {
                     Instantiate(hitEffect, enemy.transform.position, Quaternion.identity);
                 }
-                if (damagePopup != null)
+                if (popupSpawner != null)
                 {
-                    GameObject popup = Instantiate(damagePopup, enemy.transform.position + Vector3.up * 2f, Quaternion.identity);
-                    popup.GetComponent<DamagePopup>().Setup(attackDamage);
+                    popupSpawner.SpawnPopup(attackDamage, enemy.transform.position);
                 }
             }
         }

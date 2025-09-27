@@ -12,7 +12,7 @@ public class PlayerCombat : MonoBehaviour
     public float attackRange = 0.5f;
     public int attackDamage = 20;
     public LayerMask enemyLayers;
-    public float attackRate = 2f;
+    public float attackRate = 0.75f; //tempo di attesa in secondi da dover aspettare per l'attacco successivo
     private float nextAttackTime = 0f;
     // Start is called before the first frame update
     void Start()
@@ -28,7 +28,7 @@ public class PlayerCombat : MonoBehaviour
             if (Input.GetButtonDown("Fire1")) // Click sinistro del mouse
             {
                 Attack();
-                nextAttackTime = Time.time + 1f / attackRate;
+                nextAttackTime = Time.time + attackRate;
             }
         }
     }

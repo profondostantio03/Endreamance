@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PowerUp : MonoBehaviour
 {
-    public enum PowerUpType { Heal, MaxHealth, MaxHealthTemporary, XPBoost }
+    public enum PowerUpType { Heal, MaxHealth, MaxHealthTemporary, AttackDmg, AttackSpeed, XPBoost }
     public PowerUpType type;
     public int amount = 20;
     public float duration = 5f;

@@ -8,10 +8,11 @@ public class WeaponManager : MonoBehaviour
     public Transform weaponHolder; // il transform "weapon_r"
 
     private WeaponStats currentWeaponStats;
+
     // Start is called before the first frame update
     void Start()
     {
-        UpdateEquippedWeapon();
+
     }
 
     // Update is called once per frame
@@ -20,30 +21,9 @@ public class WeaponManager : MonoBehaviour
         
     }
 
-    public void UpdateEquippedWeapon()
+    void SelectWeapon(int index)
     {
-        // rimuove eventuali bonus della vecchia arma
-        if (currentWeaponStats != null)
-        {
-            currentWeaponStats.Unequip(playerCombat);
-            currentWeaponStats = null;
-        }
-
-        // trova l'arma attiva nel weaponHolder
-        if (weaponHolder.childCount > 0)
-        {
-            Transform activeWeapon = weaponHolder.GetChild(0);
-            currentWeaponStats = activeWeapon.GetComponent<WeaponStats>();
-
-            if (currentWeaponStats != null)
-            {
-                currentWeaponStats.Equip(playerCombat);
-                Debug.Log($"Arma equipaggiata: {activeWeapon.name}");
-            }
-            else
-            {
-                Debug.LogWarning($"L'arma {activeWeapon.name} non ha uno script WeaponStats!");
-            }
-        }
+        for (int i = 0; i < weaponHolder.childCount; i++)
+            weaponHolder.GetChild(i).gameObject.SetActive(i == index);
     }
 }

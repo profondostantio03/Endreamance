@@ -7,9 +7,24 @@ public class WeaponStats : MonoBehaviour
     public int damageBonus = 0;
     public float attackRateBonus = 0f;   // valori positivi = attacchi più veloci
     public float attackRangeBonus = 0f;
+
+    private PlayerCombat playerCombat;
     private bool equipped = false;
 
-    public void Equip(PlayerCombat playerCombat)
+    private void OnEnable()
+    {
+        if (playerCombat == null) 
+        { 
+            playerCombat = FindObjectOfType<PlayerCombat>();
+        }
+        Equip();
+    }
+
+    private void OnDisable()
+    {
+        Unequip();
+    }
+    public void Equip()
     {
         if (playerCombat == null || equipped) return;
 
@@ -18,9 +33,10 @@ public class WeaponStats : MonoBehaviour
         playerCombat.attackRange += attackRangeBonus;
 
         equipped = true;
+        FindObjectOfType<PlayerStatsUI>()?.UpdateUI();
     }
 
-    public void Unequip(PlayerCombat playerCombat)
+    public void Unequip()
     {
         if (playerCombat == null || !equipped) return;
 
@@ -29,5 +45,6 @@ public class WeaponStats : MonoBehaviour
         playerCombat.attackRange -= attackRangeBonus;
 
         equipped = false;
+        FindObjectOfType<PlayerStatsUI>()?.UpdateUI();
     }
 }

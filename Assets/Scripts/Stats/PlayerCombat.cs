@@ -14,6 +14,8 @@ public class PlayerCombat : MonoBehaviour
     public LayerMask enemyLayers;
     public float attackRate = 0.75f; //tempo di attesa in secondi da dover aspettare per l'attacco successivo
     private float nextAttackTime = 0f;
+    public float knockbackForce = 15f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -56,6 +58,16 @@ public class PlayerCombat : MonoBehaviour
                 if (popupSpawner != null)
                 {
                     popupSpawner.SpawnPopup(attackDamage, enemy.transform.position);
+                }
+
+                KnockbackReceiver receiver = enemy.GetComponent<KnockbackReceiver>();
+                if (receiver != null)
+                {
+                    Vector3 direction = (enemy.transform.position - transform.position);
+
+                    direction.y = 0;
+
+                    receiver.ApplyKnockback(direction, knockbackForce);
                 }
             }
         }

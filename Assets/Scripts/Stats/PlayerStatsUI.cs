@@ -36,7 +36,7 @@ public class PlayerStatsUI : MonoBehaviour
             damageText.text = $"Danno: {playerCombat.attackDamage}";
 
         if (attackRateText != null)
-            attackRateText.text = $"Velocità: {playerCombat.attackRate:0.00}s";
+            attackRateText.text = $"Velocita': {playerCombat.attackRate:0.00}s";
 
         if (attackRangeText != null)
             attackRangeText.text = $"Raggio: {playerCombat.attackRange:0.00}";
@@ -44,10 +44,25 @@ public class PlayerStatsUI : MonoBehaviour
         // per mostrare l’arma attualmente equipaggiata
         if (weaponManager != null && weaponNameText != null)
         {
-            if (weaponManager.weaponHolder != null && weaponManager.weaponHolder.childCount > 0)
-                weaponNameText.text = $"Arma: {weaponManager.weaponHolder.GetChild(0).name}";
+            string armaAttiva = TrovaArmaAttiva();
+
+            if (!string.IsNullOrEmpty(armaAttiva))
+                weaponNameText.text = $"Arma: {armaAttiva}";
             else
                 weaponNameText.text = "Arma: Nessuna";
         }
+    }
+
+    private string TrovaArmaAttiva()
+    {
+        if(weaponManager.weaponHolder == null)
+            return null;
+
+        foreach (Transform arma in weaponManager.weaponHolder)
+        {
+            if (arma.gameObject.activeSelf) 
+                return arma.name;
+        }
+        return null;
     }
 }

@@ -1,15 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+[System.Serializable]
+public class SpecialSkill
+{
+    [Header("Skill settings")]
+    public string skillName;
+    public KeyCode activationKey;
+    public float specialCooldown = 2f;
 
+    public int damageBonus = 2;
+    public float knockbackMultiplier = 2f;
+    public GameObject specialHitEffect;
+
+    [HideInInspector] public float nextUseTime = 0f;
+    [HideInInspector] public bool unlocked = false;
+}
 public class PlayerCombat : MonoBehaviour
 {
     public Animator animator;
     public Transform attackPoint;
     public GameObject hitEffect;
-    public GameObject specialHitEffect;
     public GameObject damagePopup;
     public DamagePopupSpawn popupSpawner;
+
     public float attackRange = 0.5f;
     public int attackDamage = 20;
     public LayerMask enemyLayers;
@@ -17,11 +31,10 @@ public class PlayerCombat : MonoBehaviour
     private float nextAttackTime = 0f;
     public float knockbackForce = 15f;
 
-    [Header("Special Skill")]
-    public float specialCooldown = 2f;
-    public int specialDamageBonus = 2;
-    private float specialKnockbackMultiplier = 2f;
-    private float nextSpecialTime = 0f;
+    [Header("Special Skills")]
+    public SpecialSkill skillR = new SpecialSkill { skillName = "Skill R" , activationKey = KeyCode.R};
+    public SpecialSkill skillT = new SpecialSkill { skillName = "Skill T", activationKey = KeyCode.T };
+    public SpecialSkill skillE = new SpecialSkill { skillName = "Skill E", activationKey = KeyCode.E };
 
     // Start is called before the first frame update
     void Start()
@@ -39,12 +52,10 @@ public class PlayerCombat : MonoBehaviour
                 Attack();
                 nextAttackTime = Time.time + attackRate;
             }
-            
-            if(Time.time >= nextSpecialTime && Input.GetKeyDown(KeyCode.R))
-            {
-                SpecialAttack();
-                nextSpecialTime = Time.time + specialCooldown;
-            }
+
+            CheckAndUseSkill(skillR);
+            CheckAndUseSkill(skillT);
+            CheckAndUseSkill(skillE);
         }
     }
 
@@ -93,13 +104,26 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    void SpecialAttack()
+    void CheckAndUseSkill(SpecialSkill skill)
+    {
+        if (!skill.unlocked) return;
+        if (Time.time < skill.nextUseTime) return;
+        if (Input.GetKeyDown(skill.activationKey))
+        {
+            UseSpecialSkill(skill);
+            skill.nextUseTime = Time.time + skill.specialCooldown;
+        }
+    }
+    void UseSpecialSkill(SpecialSkill skill)
     {
         animator.SetTrigger("Attack"); //potrei cambiarlo in "SpecialAttack" e creare una animazione diversa nell'animator
-        int totalDamage = attackDamage * specialDamageBonus;
-        float totalKnockback = knockbackForce * specialKnockbackMultiplier;
-        PerformAttack(totalDamage, attackRange, specialHitEffect, totalKnockback);
+        int totalDamage = attackDamage * skill.damageBonus;
+        float totalKnockback = knockbackForce * skill.knockbackMultiplier;
+        PerformAttack(totalDamage, attackRange, skill.specialHitEffect, totalKnockback);
     }
+    public void UnlockSkillR() => skillR.unlocked = true;
+    public void UnlockSkillT() => skillT.unlocked = true;
+    public void UnlockSkillE() => skillE.unlocked = true;
     void OnDrawGizmosSelected()
     {
         if (attackPoint == null) return;

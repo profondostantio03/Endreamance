@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5833027343725094713, guid: d058d55d1102c434b8b1bca9a9e36fde, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 49f2ecb08a0c38140b335a0a1f7f66f4, type: 2}
     - target: {fileID: 5833027343726863833, guid: d058d55d1102c434b8b1bca9a9e36fde, type: 3}
       propertyPath: m_LocalPosition.x
       value: 18.701439
@@ -50,7 +54,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5833027343727032825, guid: d058d55d1102c434b8b1bca9a9e36fde, type: 3}
       propertyPath: m_Name
-      value: newGrass (1) Variant
+      value: darkGrass
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

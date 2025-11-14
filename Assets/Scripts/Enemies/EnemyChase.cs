@@ -27,6 +27,13 @@ public class EnemyChase : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // controllo per il knockback
+        if (agent == null || !agent.enabled || !agent.isOnNavMesh)
+        {
+            return;
+        }
+
+        // altri controlli
         if (enemyScript != null && enemyScript.IsDying()) return; 
         if (player == null) return;
 

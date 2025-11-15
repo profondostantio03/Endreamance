@@ -1,21 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[System.Serializable]
-public class SpecialSkill
-{
-    [Header("Skill settings")]
-    public string skillName;
-    public KeyCode activationKey;
-    public float specialCooldown = 2f;
 
-    public int damageBonus = 2;
-    public float knockbackMultiplier = 2f;
-    public GameObject specialHitEffect;
-
-    [HideInInspector] public float nextUseTime = 0f;
-    [HideInInspector] public bool unlocked = false;
-}
 public class PlayerCombat : MonoBehaviour
 {
     public Animator animator;
@@ -31,10 +17,12 @@ public class PlayerCombat : MonoBehaviour
     private float nextAttackTime = 0f;
     public float knockbackForce = 15f;
 
-    [Header("Special Skills")]
-    public SpecialSkill skillR = new SpecialSkill { skillName = "Skill R" , activationKey = KeyCode.R};
-    public SpecialSkill skillT = new SpecialSkill { skillName = "Skill T", activationKey = KeyCode.T };
-    public SpecialSkill skillE = new SpecialSkill { skillName = "Skill E", activationKey = KeyCode.E };
+    [Header("Equipped Special Skills")]
+    public SkillData skillR;
+    public SkillData skillT;
+    public SkillData skillE;
+
+    private Dictionary<SkillData, float> cooldownTracker = new Dictionary<SkillData, float>();
 
     // Start is called before the first frame update
     void Start()
@@ -53,9 +41,9 @@ public class PlayerCombat : MonoBehaviour
                 nextAttackTime = Time.time + attackRate;
             }
 
-            CheckAndUseSkill(skillR);
-            CheckAndUseSkill(skillT);
-            CheckAndUseSkill(skillE);
+            CheckSkill(skillR);
+            CheckSkill(skillT);
+            CheckSkill(skillE);
         }
     }
 
@@ -81,14 +69,14 @@ public class PlayerCombat : MonoBehaviour
             EnyDamageable damageable = enemy.GetComponent<EnyDamageable>();
             if (damageable != null)
             {
-                damageable.TakeDamage(attackDamage);
+                damageable.TakeDamage(damage);
                 if (effect != null)
                 {
                     Instantiate(effect, enemy.transform.position, Quaternion.identity);
                 }
                 if (popupSpawner != null)
                 {
-                    popupSpawner.SpawnPopup(attackDamage, enemy.transform.position);
+                    popupSpawner.SpawnPopup(damage, enemy.transform.position);
                 }
 
                 KnockbackReceiver receiver = enemy.GetComponent<KnockbackReceiver>();
@@ -98,32 +86,44 @@ public class PlayerCombat : MonoBehaviour
 
                     direction.y = 0;
 
-                    receiver.ApplyKnockback(direction, knockbackForce);
+                    receiver.ApplyKnockback(direction, knockback);
                 }
             }
         }
     }
 
-    void CheckAndUseSkill(SpecialSkill skill)
+    void CheckSkill(SkillData skill)
     {
-        if (!skill.unlocked) return;
-        if (Time.time < skill.nextUseTime) return;
+        if (skill == null) return;
+        if (!cooldownTracker.ContainsKey(skill))
+            cooldownTracker[skill] = 0;
+
+        if (Time.time < cooldownTracker[skill]) return;
+
         if (Input.GetKeyDown(skill.activationKey))
         {
-            UseSpecialSkill(skill);
-            skill.nextUseTime = Time.time + skill.specialCooldown;
+            UseSkill(skill);
+            cooldownTracker[skill] = Time.time + skill.cooldown;
         }
     }
-    void UseSpecialSkill(SpecialSkill skill)
+    void UseSkill(SkillData skill)
     {
         animator.SetTrigger("Attack"); //potrei cambiarlo in "SpecialAttack" e creare una animazione diversa nell'animator
-        int totalDamage = attackDamage * skill.damageBonus;
+        int totalDamage = Mathf.RoundToInt(attackDamage * skill.damageMultiplier);
         float totalKnockback = knockbackForce * skill.knockbackMultiplier;
-        PerformAttack(totalDamage, attackRange, skill.specialHitEffect, totalKnockback);
+        PerformAttack(totalDamage, attackRange, skill.hitEffect, totalKnockback);
     }
-    public void UnlockSkillR() => skillR.unlocked = true;
-    public void UnlockSkillT() => skillT.unlocked = true;
-    public void UnlockSkillE() => skillE.unlocked = true;
+
+    public void EquipSkill(SkillData newSkill)
+    {
+        switch (newSkill.slot)
+        {
+            case SkillSlot.R: skillR = newSkill; break;
+            case SkillSlot.E: skillE = newSkill; break;
+            case SkillSlot.T: skillT = newSkill; break;
+        }
+    }
+
     void OnDrawGizmosSelected()
     {
         if (attackPoint == null) return;

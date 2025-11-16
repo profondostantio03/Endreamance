@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: WaterBubble
   m_EditorClassIdentifier: 
   skillName: Water Bubble
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 0f6412877bd000e44af199aaffe18854, type: 3}
   slot: 0
   activationKey: 114
-  hitEffect: {fileID: 4553287630450876385, guid: 3f52f3c614da1444bab803eaa337a18e, type: 3}
+  hitEffect: {fileID: 8205706795460263314, guid: 326e86d5729c54e479798cacab220bb2, type: 3}
   damageMultiplier: 2
   cooldown: 2
-  knockbackMultiplier: 2
+  knockbackMultiplier: 3

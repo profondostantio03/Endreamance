@@ -23,6 +23,7 @@ public class PlayerCombat : MonoBehaviour
     public SkillData skillE;
 
     private Dictionary<SkillData, float> cooldownTracker = new Dictionary<SkillData, float>();
+    public Dictionary<SkillSlot, SkillData> equippedSkills = new Dictionary<SkillSlot, SkillData>(); // PER SALVARE LA SKILL SCELTA
 
     // Start is called before the first frame update
     void Start()
@@ -122,6 +123,13 @@ public class PlayerCombat : MonoBehaviour
             case SkillSlot.E: skillE = newSkill; break;
             case SkillSlot.T: skillT = newSkill; break;
         }
+    }
+
+    public void AssignSkill(SkillSlot slot, SkillData data) // per equipaggiare la skill scelta 
+    {
+        equippedSkills[slot] = data;
+        EquipSkill(data);
+        Debug.Log($"Skill {data.skillName} assegnata allo slot {slot}");
     }
 
     void OnDrawGizmosSelected()

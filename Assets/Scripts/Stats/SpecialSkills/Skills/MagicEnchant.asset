@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44c4375321266a240b8213c0f90454bb, type: 3}
-  m_Name: FireBall
+  m_Name: MagicEnchant
   m_EditorClassIdentifier: 
-  skillName: FireBall
-  icon: {fileID: 21300000, guid: c5657dd9cbd242d4d9c8253f928e0821, type: 3}
+  skillName: Magic Enchant
+  icon: {fileID: 0}
   slot: 0
   activationKey: 114
-  hitEffect: {fileID: 2504214343621411470, guid: 3ed0d324122d7b24eaec75c55c74aafc, type: 3}
+  hitEffect: {fileID: 4660623725534848750, guid: e88950791eccc2941a2faac0cfcb8937, type: 3}
   damageMultiplier: 3
   cooldown: 2
-  knockbackMultiplier: 3
+  knockbackMultiplier: 2

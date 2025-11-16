@@ -8,6 +8,7 @@ public enum SkillSlot { R, E, T}
 public class SkillData : ScriptableObject
 {
     public string skillName;
+    public Sprite icon;
 
     public SkillSlot slot; 
     public KeyCode activationKey; // da andare a modificare quando avro' stabilito quali saranno i possibili tasti di attivazione di una skill

@@ -13,6 +13,8 @@ public class NicknameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Time.timeScale = 0;
+        GameInputBlocker.Blocked = true;
         if (PlayerPrefs.HasKey(NicknameKey))
         {
             string savedName = PlayerPrefs.GetString(NicknameKey);
@@ -40,5 +42,7 @@ public class NicknameManager : MonoBehaviour
         PlayerPrefs.Save(); // flush per sicurezza 
 
         nicknamePanel.SetActive(false);
+        GameInputBlocker.Blocked = false;
+        Time.timeScale = 1;
     }
 }

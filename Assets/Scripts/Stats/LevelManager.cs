@@ -9,6 +9,12 @@ public class LevelManager : MonoBehaviour
     public Image Level;
     public Text MyLevel;
     public Text XPAmount;
+
+    [Header("Sistema Scelta Classe")]
+    public ClassSelectorUI classSelectorUI;
+    public int levelToUnlockClass = 3;
+    public bool hasTriggeredClassSelection = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,5 +32,20 @@ public class LevelManager : MonoBehaviour
 
         MyLevel.text = "Livello: " + stats.level;
         XPAmount.text = "XP: " + stats.currentXP + "/" + stats.xpToNextLevel;
+
+        if (stats.level >= levelToUnlockClass && !hasTriggeredClassSelection)
+        {
+            OpenClassMenu();
+        }
+    }
+
+    void OpenClassMenu()
+    {
+        if (classSelectorUI != null)
+        {
+            classSelectorUI.OpenMenu();
+            hasTriggeredClassSelection= true;
+            Debug.Log("Livello raggiunto, aperto menu classi");
+        }
     }
 }

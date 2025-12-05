@@ -130,19 +130,22 @@ public class Enemy : MonoBehaviour, EnyDamageable
         Destroy(gameObject); // Lo elimina dopo che si è abbassato il canale alfa
     }
 
-    void OnCollisionStay(Collision collision)
+    public void TryAttackPlayer(Transform player)
     {
-        if (collision.gameObject.CompareTag("Player") && Time.time - lastAttackTime > attackCooldown)
+        if (isDying) return;
+
+        if (Time.time - lastAttackTime >= attackCooldown)
         {
-            Debug.Log("attacco subito");
-            CharacterStats stats = collision.gameObject.GetComponent<CharacterStats>();
+            CharacterStats stats = player.GetComponent<CharacterStats>();
             if (stats != null)
             {
                 stats.TakeDamage(damage);
+                Debug.Log("Nemico ha attaccato il player infliggendo " + damage + " danni.");
                 lastAttackTime = Time.time;
             }
         }
     }
+
 
 
     public bool IsDying()

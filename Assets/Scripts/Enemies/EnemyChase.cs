@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyChase : MonoBehaviour
 {
+    public Animator animator;
     public Transform player;
     public float detectionRange = 10f;
     public float stopRange = 2f;
@@ -15,6 +16,7 @@ public class EnemyChase : MonoBehaviour
     {
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         enemyScript = GetComponent<Enemy>();
+        animator = GetComponent<Animator>();
 
         if (player == null)
         {
@@ -43,11 +45,13 @@ public class EnemyChase : MonoBehaviour
         {
             if (distance > stopRange)
             {
+                animator.SetBool("isMoving", distance > stopRange);
                 agent.SetDestination(player.position);
             }
             else
             {
                 agent.ResetPath();
+                enemyScript.TryAttackPlayer(player);
                 // si puo aggiungere animazione di attacco o trigger
             }
         }

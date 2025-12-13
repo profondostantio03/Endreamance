@@ -17,12 +17,15 @@ public class Enemy : MonoBehaviour, EnyDamageable
     public GameObject dropPrefab; // prefab "DroppedItem"
     public int dropAmount = 1;
     public bool itemToDropDroppable = true;
+    private Animator animator;
+
     // Start is called before the first frame update
     void Start()
     {
         currentHealth = maxHealth;
         rend = GetComponentInChildren<Renderer>();
         playerInventory = FindObjectOfType<Inventory>(); // Trova l'inventario nella scena
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -43,6 +46,9 @@ public class Enemy : MonoBehaviour, EnyDamageable
     }
     void Die()
     {
+        Animator anim = GetComponent<Animator>();
+        anim.SetBool("isDying", true);
+
         Debug.Log("Enemy died!");
         // Si possono mettere le varie animazioni suoni etc
         StartCoroutine(FadeAndDie());
@@ -132,6 +138,8 @@ public class Enemy : MonoBehaviour, EnyDamageable
 
     public void TryAttackPlayer(Transform player)
     {
+        animator.SetTrigger("Attack");
+
         if (isDying) return;
 
         if (Time.time - lastAttackTime >= attackCooldown)

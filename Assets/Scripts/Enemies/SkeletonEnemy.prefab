@@ -56,6 +56,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 2284350100254011880, guid: 5aad5ec1eaf2539498946c647be0c014, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 0fd98291356669641a0d7bb492efb7ce, type: 2}
     - target: {fileID: 2313240386664563522, guid: 5aad5ec1eaf2539498946c647be0c014, type: 3}
       propertyPath: m_Layer
       value: 7
@@ -339,9 +343,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 1
+  m_Height: 2.1
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1.05, z: 0}
 --- !u!114 &-3177443277518213600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -374,6 +378,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bac296682202e640b201b0ecc687c7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 203851519384938695}
   player: {fileID: 0}
   detectionRange: 10
   stopRange: 2

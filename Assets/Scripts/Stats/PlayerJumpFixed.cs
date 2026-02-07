@@ -9,14 +9,20 @@ public class PlayerJumpFixed : MonoBehaviour
     public float tiltAmount = 7f; // inclinazione del personaggio
     public float tiltSpeed = 3f; // velocità di inclinazione
 
+    private int jumpCount = 0;
+    public int maxJumps = 2;
+    public float doubleJumpKiCost = 15f;
+    private KiManager kiManager;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        kiManager = GetComponent<KiManager>();
     }
 
     void Update()
     {
-        Jump();
+        JumpKi();
 
         // Permette un salto più corto se rilasci lo spazio prima di raggiungere l'apice
         if (Input.GetKeyUp(KeyCode.Space) && rb.velocity.y > 0)
@@ -50,9 +56,35 @@ public class PlayerJumpFixed : MonoBehaviour
         }
     }
 
+    void JumpKi()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (isGrounded)
+            {
+                PerformJump();
+            }
+            // SECONDO SALTO (se hai abbastanza Ki)
+            else if (jumpCount < maxJumps && kiManager.CanUseKi(doubleJumpKiCost))
+            {
+                kiManager.ConsumeKi(doubleJumpKiCost);
+                PerformJump();
+            }
+        }
+    }
+
+    void PerformJump()
+    {
+        // Reset velocità verticale per rendere il secondo salto consistente
+        rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+        jumpCount++;
+        isGrounded = false;
+    }
+
     void OnCollisionStay(Collision collision)
     {
         isGrounded = true;
+        jumpCount = 0;
     }
 
     void OnCollisionExit(Collision collision)

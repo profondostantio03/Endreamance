@@ -14,6 +14,8 @@ public class PlayerJumpFixed : MonoBehaviour
     public float doubleJumpKiCost = 15f;
     private KiManager kiManager;
 
+    public ParticleSystem kiJumpParticles;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -62,23 +64,27 @@ public class PlayerJumpFixed : MonoBehaviour
         {
             if (isGrounded)
             {
-                PerformJump();
+                PerformJump(false);
             }
             // SECONDO SALTO (se hai abbastanza Ki)
             else if (jumpCount < maxJumps && kiManager.CanUseKi(doubleJumpKiCost))
             {
                 kiManager.ConsumeKi(doubleJumpKiCost);
-                PerformJump();
+                PerformJump(true);
             }
         }
     }
 
-    void PerformJump()
+    void PerformJump(bool spawnParticles)
     {
         // Reset velocità verticale per rendere il secondo salto consistente
         rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
         jumpCount++;
         isGrounded = false;
+        if (spawnParticles && kiJumpParticles != null)
+        {
+            kiJumpParticles.Play();
+        }
     }
 
     void OnCollisionStay(Collision collision)

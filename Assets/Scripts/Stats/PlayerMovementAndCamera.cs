@@ -13,6 +13,11 @@ public class PlayerMovementAndCamera : MonoBehaviour
     public float baseSpeed;
     public Camera playerCamera; // Riferimento alla telecamera
 
+    [Header("Roll Settings")]
+    public float rollSpeed = 10f;
+    public float rollDuration = 0.8f;
+    public bool isRolling = false;
+
     void Start()
     {
         characterAnimator = GetComponent<Animator>();// //sostituito da characterAnimator.SetFloat in Update
@@ -21,6 +26,8 @@ public class PlayerMovementAndCamera : MonoBehaviour
 
     void Update()
     {
+        if (isRolling) return;
+
         // Ottieni l'input dell'utente
         float horizontal = Input.GetAxis("Horizontal"); // A/D o Frecce sinistra/destra
         float vertical = Input.GetAxis("Vertical"); // W/S o Frecce su/giù
@@ -43,6 +50,12 @@ public class PlayerMovementAndCamera : MonoBehaviour
 
         // Calcola la direzione del movimento
         Vector3 movement = (cameraForward * vertical + cameraRight * horizontal).normalized;
+
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            StartCoroutine(RollRoutine(movement));
+            return;
+        }
 
         bool isSprinting = Input.GetKey(KeyCode.LeftShift) && vertical > 0;
 
@@ -81,7 +94,7 @@ public class PlayerMovementAndCamera : MonoBehaviour
 
         float speed = 0;
 
-        if (Input.GetKey(KeyCode.LeftShift) && vertical > 0)
+        if (Input.GetKey(KeyCode.LeftControl) && vertical > 0)
         {
             speed = sprintSpeed; // Imposta l'animazione per la velocità normale
         }
@@ -93,6 +106,33 @@ public class PlayerMovementAndCamera : MonoBehaviour
 
         /*float moveAmount = movement.magnitude;
         characterAnimator.SetFloat("MoveSpeed", moveAmount);*/
+    }
+
+    private IEnumerator RollRoutine(Vector3 rollDirection)
+    {
+        isRolling = true;
+
+        // se il giocatore è fermo e preme Shift, rotola in avanti rispetto alla telecamera
+        if (rollDirection.magnitude == 0)
+        {
+            rollDirection = playerCamera.transform.forward;
+            rollDirection.y = 0;
+            rollDirection.Normalize();
+        }
+
+        characterAnimator.SetTrigger("Roll");
+
+        float timer = 0f;
+        while (timer < rollDuration)
+        {
+            // muove il personaggio forzatamente nella direzione della capriola
+            transform.Translate(rollDirection * rollSpeed * Time.deltaTime, Space.World);
+
+            timer += Time.deltaTime;
+            yield return null; // aspetta il frame successivo
+        }
+
+        isRolling = false;
     }
 
     // PER LA GESTIONE DEL PIANO SPEEDBOOSTER ALLO SPAWN, O IN OGNI CASO PER FAR FUNZIONARE QUALSIASI OGGETTO CON LO SCRIPT SpeedBooster.cs
